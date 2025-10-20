@@ -3,11 +3,11 @@ import OpenAI from "openai";
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export async function POST(req: Request) {
-  const input = await req.json();
+  const { model, messages } = await req.json();
 
   const result = await client.responses.create({
-    model: "gpt-5-nano",
-    input,
+    model: model,
+    input: messages,
     stream: true,
   });
 

@@ -1,12 +1,15 @@
 "use client";
-import { useState, memo, useEffect } from "react";
+import { useState, memo, useEffect, useContext } from "react";
 import { useChatContexts } from "@/app/customHooks/useChatContext";
 import { IconSend, IconClear } from "@/app/assets/Icons";
 import ErrorModal from "../general/ErrorModal";
+import { ModelContext } from "@/app/context/ModelContext";
 
 const UserInput = () => {
   const [prompt, setPrompt] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const model = useContext(ModelContext);
+
   const { messageContext, incomingMessageContext, loadingContext } =
     useChatContexts();
 
@@ -40,7 +43,10 @@ const UserInput = () => {
     try {
       const response = await fetch("../../api/chat", {
         method: "POST",
-        body: JSON.stringify(newMessages),
+        body: JSON.stringify({
+          model: model?.model,
+          messages: newMessages,
+        }),
         //This approach can be used if the expectation
         // is to not mantain the conversation context
         // body: JSON.stringify({ prompt }),

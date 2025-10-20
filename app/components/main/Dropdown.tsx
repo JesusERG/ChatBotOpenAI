@@ -1,11 +1,11 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, memo } from "react";
 import { ModelContext } from "../../context/ModelContext";
 
 const Dropdown = () => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const model = useContext(ModelContext);
   const modelArray = [
-    { model: "gpt-5-nano", displayName: "GPT 5" },
+    { model: "gpt-5-nano", displayName: "GPT 5 Nano" },
     { model: "gpt-4-turbo", displayName: "GPT 4 Turbo" },
     { model: "gpt-3.5-turbo", displayName: "GPT 3.5 Turbo" },
   ];
@@ -83,4 +83,4 @@ const Dropdown = () => {
   );
 };
 
-export default Dropdown;
+export default memo(Dropdown);
