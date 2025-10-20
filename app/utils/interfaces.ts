@@ -18,3 +18,8 @@ export interface LoadingContextType {
   loadingState: boolean;
   setLoadingState: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
+export interface ModelContextType {
+  model: string;
+  setModel: React.Dispatch<React.SetStateAction<string>>;
+}

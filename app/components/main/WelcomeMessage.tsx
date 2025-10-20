@@ -19,9 +19,6 @@ const WelcomeMessage = () => {
         });
 
         const result = await response.json();
-
-        console.log("result: ", result);
-
         setCustomMessage(result);
       } catch (e) {
         console.log(e);
@@ -31,7 +28,6 @@ const WelcomeMessage = () => {
     fetchWelcomeMessage();
   }, []);
 
-  console.log("rendered");
   return (
     <div className="flex flex-2 flex-col  mt-35 animate-fadeInUp">
       <h1 className="text-text text-center ">Hello Jesus!</h1>
