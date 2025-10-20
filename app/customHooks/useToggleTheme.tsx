@@ -1,4 +1,5 @@
 // hooks/useTheme.ts
+"use client";
 import { useEffect, useState } from "react";
 
 export type Theme = "dark" | "light";

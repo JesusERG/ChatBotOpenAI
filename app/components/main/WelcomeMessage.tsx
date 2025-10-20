@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import Loading from "../general/Loading";
 
 const WelcomeMessage = () => {
-  const [customMessage, setCustomMessage] = useState<string>("hey");
+  const [customMessage, setCustomMessage] = useState<string>("");
   const hasFetched = useRef(false);
 
   useEffect(() => {
