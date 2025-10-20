@@ -1,5 +1,5 @@
 "use client";
-import { useState, memo, useEffect, useContext } from "react";
+import { useState, memo, useEffect, useContext, useRef } from "react";
 import { useChatContexts } from "@/app/customHooks/useChatContext";
 import { IconSend, IconClear } from "@/app/assets/Icons";
 import ErrorModal from "../general/ErrorModal";
@@ -8,8 +8,11 @@ import { ModelContext } from "@/app/context/ModelContext";
 const UserInput = () => {
   const [prompt, setPrompt] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const model = useContext(ModelContext);
 
+  //Controler to abort request in case the user clears the message hystory mid fetch
+  const controllerRef = useRef<AbortController | null>(null);
+
+  const model = useContext(ModelContext);
   const { messageContext, incomingMessageContext, loadingContext } =
     useChatContexts();
 
@@ -29,15 +32,20 @@ const UserInput = () => {
 
     setLoadingState(true);
 
-    // Build the new message array
-    const newMessages = [...messages, { role: "user", content: prompt }];
+    // Abort any previous request
+    if (controllerRef.current) {
+      controllerRef.current.abort();
+    }
 
-    // Add the user's message to the messages array
+    // Create new AbortController
+    const controller = new AbortController();
+    controllerRef.current = controller;
+
+    const newMessages = [...messages, { role: "user", content: prompt }];
     setMessages((prevMessages) => [
       ...prevMessages,
       { role: "user", content: prompt },
     ]);
-
     setPrompt("");
 
     try {
@@ -47,9 +55,7 @@ const UserInput = () => {
           model: model?.model,
           messages: newMessages,
         }),
-        //This approach can be used if the expectation
-        // is to not mantain the conversation context
-        // body: JSON.stringify({ prompt }),
+        signal: controller.signal, // 👈 attach the controller
       });
 
       if (!response.body) return;
@@ -58,39 +64,49 @@ const UserInput = () => {
         .pipeThrough(new TextDecoderStream())
         .getReader();
 
-      if (reader) setLoadingState(false);
+      setLoadingState(false);
 
       let incomingMessage = "";
 
       while (true) {
         const { done, value } = await reader.read();
-
         if (done) {
-          setMessages((prevState) => [
-            ...prevState,
+          setMessages((prev) => [
+            ...prev,
             { role: "assistant", content: incomingMessage },
           ]);
-
           setIncomingMessage("");
-
           break;
         }
-
         if (value) {
           incomingMessage += value;
-
           setIncomingMessage(incomingMessage);
         }
       }
     } catch (error) {
-      setIsModalOpen(true);
+      if (error.name === "AbortError") {
+        console.log("Aborted");
+      } else {
+        console.error("Error:", error);
+        setIsModalOpen(true);
+      }
+    } finally {
       setLoadingState(false);
-      console.error(error);
+      controllerRef.current = null; // clean up
     }
   };
+
   const handleClear = () => {
+    // 👇 Cancel any ongoing request
+    if (controllerRef.current) {
+      controllerRef.current.abort();
+      controllerRef.current = null;
+    }
+
     localStorage.removeItem("messages");
     setMessages([]);
+    setIncomingMessage("");
+    setLoadingState(false);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -107,7 +123,7 @@ const UserInput = () => {
     >
       <textarea
         placeholder="Input a prompt..."
-        className=" bg-bg-light rounded-xl field-sizing-content max-h-40 w-9/10 p-2 overflow-y-scroll no-scrollbar resize-none"
+        className="bg-bg-light rounded-xl field-sizing-content max-h-40 w-9/10 p-2 overflow-y-scroll no-scrollbar resize-none shadow-md shadow-border"
         value={prompt}
         onChange={(e) => setPrompt(e.target.value)}
         onKeyDown={handleKeyDown}
@@ -127,7 +143,7 @@ const UserInput = () => {
 
       <button
         type="button"
-        className={`button-base bg-warning`}
+        className="button-base bg-warning"
         onClick={handleClear}
       >
         <span className="hidden lg:inline">Clear</span>
