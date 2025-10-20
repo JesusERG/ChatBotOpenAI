@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: oklch(0.1 0.025 264);
   --foreground: #171717;
 }
 
@@ -55,6 +55,10 @@
 /* =========================================
     BASE sTYLES
    ========================================= */
+
+html {
+  background-color: var(--color-bg-dark);
+}
 
 h1 {
   color: var(--color-text);
