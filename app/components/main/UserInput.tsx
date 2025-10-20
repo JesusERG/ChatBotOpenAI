@@ -55,7 +55,7 @@ const UserInput = () => {
           model: model?.model,
           messages: newMessages,
         }),
-        signal: controller.signal, // 👈 attach the controller
+        signal: controller.signal,
       });
 
       if (!response.body) return;
@@ -92,12 +92,11 @@ const UserInput = () => {
       }
     } finally {
       setLoadingState(false);
-      controllerRef.current = null; // clean up
+      controllerRef.current = null;
     }
   };
 
   const handleClear = () => {
-    // 👇 Cancel any ongoing request
     if (controllerRef.current) {
       controllerRef.current.abort();
       controllerRef.current = null;
