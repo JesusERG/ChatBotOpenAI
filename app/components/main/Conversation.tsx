@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useRef, useEffect } from "react";
 import { useChatContexts } from "@/app/customHooks/useChatContext";
 import Loading from "../general/Loading";
 import ChatMessageItem from "./ChatMessageItem";
@@ -11,6 +11,15 @@ const Conversation = () => {
   const { messages } = messageContext;
   const { loadingState } = loadingContext;
   const { incomingMessage } = incomingMessageContext;
+
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
+  }, [messages, incomingMessage]);
 
   return (
     <div className="mt-10 flex flex-col w-full">
@@ -25,6 +34,7 @@ const Conversation = () => {
           message={{ role: "assistant", content: incomingMessage }}
         />
       )}
+      <div ref={bottomRef} />
     </div>
   );
 };

@@ -6,7 +6,7 @@ const ChatMessageItem = ({ message }: { message: ChatMessage }) => {
     <div
       className={` p-3 w-fit rounded-2xl mb-1 bg-bg-light max-w-4/5 animate-fadeInUp `}
     >
-      <p className="user-message-text">{message.content}</p>
+      <p>{message.content}</p>
     </div>
   );
 };
