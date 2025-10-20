@@ -6,7 +6,9 @@ const ChatMessageItem = ({ message }: { message: ChatMessage }) => {
     <div
       className={` p-3 w-fit rounded-2xl my-2  ${message.role === "user" ? "bg-primary max-w-4/5 self-end animate-fadeInUp " : "bg-bg-light max-w-4/5"}`}
     >
-      <p className="user-message-text">{message.content}</p>
+      <p className={`${message.role === "user" && "user-message-text"}`}>
+        {message.content}
+      </p>
     </div>
   );
 };
