@@ -28,7 +28,7 @@ const Dropdown = () => {
             setTimeout(() => setIsOpen(false), 500);
           }}
           value={model?.model}
-          className="bg-primary w-40 h-10 p-2 rounded-xl absolute left-10 top-8 items-center justify-center animate-fadeInUp"
+          className="bg-primary w-40 h-10 p-2 rounded-xl absolute left-14 top-8 items-center justify-center animate-fadeInUp"
         >
           {modelArray.map((model) => (
             <option key={model.model} value={model.model}>
@@ -38,7 +38,7 @@ const Dropdown = () => {
         </select>
       ) : (
         <div
-          className="w-10 h-10 p-3 rounded-xl animate-fadeInUp bg-primary absolute left-10 top-8 items-center justify-center shadow-md shadow-highlight cursor-pointer "
+          className="w-10 h-10 p-3 rounded-xl animate-fadeInUp bg-primary absolute left-15 top-8 items-center justify-center shadow-md shadow-highlight cursor-pointer "
           onClick={() => setIsOpen(true)}
         >
           <IconRobot />

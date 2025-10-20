@@ -32,7 +32,7 @@
 /* =========================================
     THEME (Dark Default)
    ========================================= */
-/* @theme {
+.light-theme {
   --font-sans: var(--font-roboto);
   --color-bg-dark: oklch(0.1 0.025 264);
   --color-bg: oklch(0.15 0.025 264);
@@ -50,7 +50,7 @@
   --color-info: oklch(0.7 0.05 260);
 
   --animate-fadeInUp: fadeInUp 0.5s ease-out;
-} */
+}
 
 /* =========================================
     BASE sTYLES
