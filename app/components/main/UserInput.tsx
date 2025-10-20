@@ -26,8 +26,12 @@ const UserInput = () => {
 
     setLoadingState(true);
 
-    setMessages((prevState) => [
-      ...prevState,
+    // Build the new message array
+    const newMessages = [...messages, { role: "user", content: prompt }];
+
+    // Add the user's message to the messages array
+    setMessages((prevMessages) => [
+      ...prevMessages,
       { role: "user", content: prompt },
     ]);
 
@@ -36,7 +40,10 @@ const UserInput = () => {
     try {
       const response = await fetch("../../api/chat", {
         method: "POST",
-        body: JSON.stringify({ prompt }),
+        body: JSON.stringify(newMessages),
+        //This approach can be used if the expectation
+        // is to not mantain the conversation context
+        // body: JSON.stringify({ prompt }),
       });
 
       if (!response.body) return;
