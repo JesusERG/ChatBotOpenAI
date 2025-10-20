@@ -83,8 +83,8 @@ const UserInput = () => {
           setIncomingMessage(incomingMessage);
         }
       }
-    } catch (error) {
-      if (error.name === "AbortError") {
+    } catch (error: unknown) {
+      if (error instanceof DOMException && error.name === "AbortError") {
         console.log("Aborted");
       } else {
         console.error("Error:", error);
